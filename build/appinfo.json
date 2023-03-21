@@ -1,0 +1,37 @@
+{
+    "appKeys": {
+        "VoiceResult": 1
+    }, 
+    "targetPlatforms": [
+        "aplite", 
+        "basalt", 
+        "chalk", 
+        "diorite"
+    ], 
+    "uuid": "6b416073-5315-41c6-87a5-e113ea6b8c43", 
+    "messageKeys": {
+        "VoiceResult": 1
+    }, 
+    "companyName": "huntboom", 
+    "sdkVersion": "3", 
+    "capabilities": [
+        "MICROPHONE", 
+        "INTERNET"
+    ], 
+    "versionLabel": "1.0", 
+    "longName": "Pebble GPT Voice", 
+    "versionCode": 1, 
+    "shortName": "PebbleGPT", 
+    "watchapp": {
+        "watchface": false
+    }, 
+    "resources": {
+        "media": [
+            {
+                "type": "raw", 
+                "name": "VOICE_DATA", 
+                "file": "voice_data.wav"
+            }
+        ]
+    }
+}
