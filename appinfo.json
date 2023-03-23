@@ -1,31 +1,18 @@
 {
-  "uuid": "6b416073-5315-41c6-87a5-e113ea6b8c43",
+  "uuid": "1500ee62-ceec-4a19-8745-73e0b505f85a",
   "shortName": "PebbleGPT",
-  "longName": "Pebble GPT Voice",
+  "longName": "Pebble Chatbot",
   "companyName": "huntboom",
-  "versionCode": 1,
   "versionLabel": "1.0",
-  "capabilities": ["MICROPHONE", "INTERNET"],
   "sdkVersion": "3",
-  "targetPlatforms": [
-    "aplite",
-    "basalt",
-    "chalk",
-    "diorite"
-  ],
+  "targetPlatforms": ["basalt", "chalk"],
   "watchapp": {
     "watchface": false
   },
   "appKeys": {
-    "VoiceResult": 1
+    "dummy": 0
   },
   "resources": {
-    "media": [
-      {
-        "type": "raw",
-        "name": "VOICE_DATA",
-        "file": "voice_data.wav"
-      }
-    ]
- }
+    "media": []
+  }
 }

@@ -1,0 +1,10 @@
+#sensitive info including env variables and client secrets:
+.lock-waf_linux2_build 
+#build folder, use "pebble build" with the pebble sdk installed
+build/
+#build environment instructions:
+directions.txt
+#modules
+node_modules/
+node_modules/
+node_modules/
