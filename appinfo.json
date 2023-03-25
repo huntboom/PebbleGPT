@@ -1,16 +1,17 @@
 {
   "uuid": "1500ee62-ceec-4a19-8745-73e0b505f85a",
-  "shortName": "PebbleGPT",
-  "longName": "Pebble Chatbot",
+  "shortName": "workingGPT",
+  "longName": "workingGPT",
   "companyName": "huntboom",
   "versionLabel": "1.0",
   "sdkVersion": "3",
-  "targetPlatforms": ["basalt", "chalk"],
+  "targetPlatforms": ["aplite", "basalt", "chalk"],
   "watchapp": {
     "watchface": false
   },
   "appKeys": {
-    "dummy": 0
+    "AppKeyReady": 0,
+    "AppKeyTranscription": 1
   },
   "resources": {
     "media": []

@@ -1,5 +1,2 @@
-# simple-voice-demo
-
-![screenshot](screenshots/screenshot.png)
-
-Simple example app demonstrating how to get text input with the Dictation API.
+# js-ready-example
+Example implementation of a bare-bones app that waits for the PebbleKit JS 'ready' event.
