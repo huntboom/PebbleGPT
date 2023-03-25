@@ -6,5 +6,5 @@ build/
 directions.txt
 #modules
 node_modules/
-node_modules/
-node_modules/
+#environment variables:
+.env
