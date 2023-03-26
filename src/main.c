@@ -2,7 +2,8 @@
 
 typedef enum {
   AppKeyReady = 0,
-  AppKeyTranscription = 1
+  AppKeyTranscription = 1,
+  AppKeyResponse = 2 // Add this line
 } AppKey;
 
 static Window *s_main_window;
@@ -62,7 +63,14 @@ static void window_load(Window *window) {
 static void window_unload(Window *window) {
   text_layer_destroy(s_output_layer);
 }
+static void inbox_received_handler(DictionaryIterator *iter, void *context) {
+  Tuple *response_tuple = dict_find(iter, AppKeyResponse);
 
+  if (response_tuple) {
+    strncpy(s_last_text, response_tuple->value->cstring, sizeof(s_last_text) - 1);
+    text_layer_set_text(s_output_layer, s_last_text);
+  }
+}
 static void init() {
   s_main_window = window_create();
   window_set_click_config_provider(s_main_window, click_config_provider);
@@ -75,6 +83,7 @@ static void init() {
   s_dictation_session = dictation_session_create(sizeof(s_last_text), dictation_session_callback, NULL);
 
   // Open AppMessage communication
+  app_message_register_inbox_received(inbox_received_handler);
   app_message_open(64, 64);
 }
 
@@ -88,3 +97,4 @@ int main() {
   app_event_loop();
   deinit();
 }
+
