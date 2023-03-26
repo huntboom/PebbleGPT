@@ -11,7 +11,8 @@
   },
   "appKeys": {
     "AppKeyReady": 0,
-    "AppKeyTranscription": 1
+    "AppKeyTranscription": 1,
+    "AppKeyResponse": 2
   },
   "resources": {
     "media": []
