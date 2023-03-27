@@ -11,7 +11,7 @@ static TextLayer *s_output_layer;
 static ScrollLayer *s_scroll_layer;
 
 static DictationSession *s_dictation_session;
-static char s_last_text[1024];
+static char s_last_text[2000];
 
 // Dictation API
 static void dictation_session_callback(DictationSession *session, DictationSessionStatus status,
@@ -47,12 +47,18 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   dictation_session_start(s_dictation_session);
 }
 
+static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
+  scroll_layer_scroll_up_click_handler(recognizer, s_scroll_layer);
+}
 
-static void combined_click_config_provider(void *context) {
-  // Set the click configuration provider for the scroll layer
-  scroll_layer_set_callbacks(s_scroll_layer, (ScrollLayerCallbacks) {
-    .click_config_provider = context
-  });
+static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
+  scroll_layer_scroll_down_click_handler(recognizer, s_scroll_layer);
+}
+
+static void click_config_provider(void *context) {
+  // Set up the up and down buttons for scrolling
+  window_single_repeating_click_subscribe(BUTTON_ID_UP, 100, up_click_handler);
+  window_single_repeating_click_subscribe(BUTTON_ID_DOWN, 100, down_click_handler);
 
   // Add the select button click handler
   window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
@@ -72,9 +78,8 @@ static void window_load(Window *window) {
   // Add the TextLayer to the ScrollLayer
   scroll_layer_add_child(s_scroll_layer, text_layer_get_layer(s_output_layer));
 
-  // Set the click configuration provider to the combined provider
-  window_set_click_config_provider_with_context(s_main_window, combined_click_config_provider, s_scroll_layer);
-
+  // Set the click configuration provider 
+   window_set_click_config_provider(s_main_window, click_config_provider);
   // Add the ScrollLayer to the window
   layer_add_child(window_layer, scroll_layer_get_layer(s_scroll_layer));
 }
