@@ -3,14 +3,15 @@
 typedef enum {
   AppKeyReady = 0,
   AppKeyTranscription = 1,
-  AppKeyResponse = 2 // Add this line
+  AppKeyResponse = 2
 } AppKey;
 
 static Window *s_main_window;
 static TextLayer *s_output_layer;
+static ScrollLayer *s_scroll_layer;
 
 static DictationSession *s_dictation_session;
-static char s_last_text[512];
+static char s_last_text[1024];
 
 // Dictation API
 static void dictation_session_callback(DictationSession *session, DictationSessionStatus status,
@@ -46,23 +47,43 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   dictation_session_start(s_dictation_session);
 }
 
-static void click_config_provider(void *context) {
+
+static void combined_click_config_provider(void *context) {
+  // Set the click configuration provider for the scroll layer
+  scroll_layer_set_callbacks(s_scroll_layer, (ScrollLayerCallbacks) {
+    .click_config_provider = context
+  });
+
+  // Add the select button click handler
   window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
 }
-
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  s_output_layer = text_layer_create(GRect(bounds.origin.x, (bounds.size.h - 24) / 2, bounds.size.w, bounds.size.h));
+  s_output_layer = text_layer_create(GRect(0, 0, bounds.size.w, 2000)); // Increase height to 2000 to accommodate large texts
   text_layer_set_text(s_output_layer, "Press Select to get input!");
   text_layer_set_text_alignment(s_output_layer, GTextAlignmentCenter);
-  layer_add_child(window_layer, text_layer_get_layer(s_output_layer));
+
+  // Create the ScrollLayer and set its content size
+  s_scroll_layer = scroll_layer_create(bounds);
+  scroll_layer_set_content_size(s_scroll_layer, GSize(bounds.size.w, 2000));
+
+  // Add the TextLayer to the ScrollLayer
+  scroll_layer_add_child(s_scroll_layer, text_layer_get_layer(s_output_layer));
+
+  // Set the click configuration provider to the combined provider
+  window_set_click_config_provider_with_context(s_main_window, combined_click_config_provider, s_scroll_layer);
+
+  // Add the ScrollLayer to the window
+  layer_add_child(window_layer, scroll_layer_get_layer(s_scroll_layer));
 }
 
 static void window_unload(Window *window) {
   text_layer_destroy(s_output_layer);
+  scroll_layer_destroy(s_scroll_layer);
 }
+
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *response_tuple = dict_find(iter, AppKeyResponse);
 
@@ -71,9 +92,9 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
     text_layer_set_text(s_output_layer, s_last_text);
   }
 }
+
 static void init() {
   s_main_window = window_create();
-  window_set_click_config_provider(s_main_window, click_config_provider);
   window_set_window_handlers(s_main_window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,
@@ -84,7 +105,7 @@ static void init() {
 
   // Open AppMessage communication
   app_message_register_inbox_received(inbox_received_handler);
-  app_message_open(64, 64);
+  app_message_open(1024, 64);
 }
 
 static void deinit() {
@@ -97,4 +118,3 @@ int main() {
   app_event_loop();
   deinit();
 }
-
