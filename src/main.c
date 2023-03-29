@@ -6,12 +6,13 @@ typedef enum {
   AppKeyResponse = 2
 } AppKey;
 
+
 static Window *s_main_window;
 static TextLayer *s_output_layer;
 static ScrollLayer *s_scroll_layer;
 
 static DictationSession *s_dictation_session;
-static char s_last_text[2000];
+static char s_last_text[20000];
 
 // Dictation API
 static void dictation_session_callback(DictationSession *session, DictationSessionStatus status,
@@ -70,7 +71,8 @@ static void window_load(Window *window) {
   s_output_layer = text_layer_create(GRect(0, 0, bounds.size.w, 2000)); // Increase height to 2000 to accommodate large texts
   text_layer_set_text(s_output_layer, "Press Select to get input!");
   text_layer_set_text_alignment(s_output_layer, GTextAlignmentCenter);
-
+  //set font
+  text_layer_set_font(s_output_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));
   // Create the ScrollLayer and set its content size
   s_scroll_layer = scroll_layer_create(bounds);
   scroll_layer_set_content_size(s_scroll_layer, GSize(bounds.size.w, 2000));
@@ -110,7 +112,7 @@ static void init() {
 
   // Open AppMessage communication
   app_message_register_inbox_received(inbox_received_handler);
-  app_message_open(1024, 64);
+  app_message_open(4096, 4096);
 }
 
 static void deinit() {
