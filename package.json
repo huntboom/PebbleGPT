@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "author": "huntboom",
+  "private": true,
+  "dependencies": {},
+  "keywords": [
+    "pebble-app"
+  ],
+  "pebble": {
+    "sdkVersion": "3",
+    "resources": {
+      "media": []
+    },
+    "projectType": "native",
+    "uuid": "1500ee62-ceec-4a19-8745-73e0b505f85a",
+    "messageKeys": {
+      "AppKeyReady": 0,
+      "AppKeyTranscription": 1,
+      "AppKeyResponse": 2
+    },
+    "enableMultiJS": false,
+    "displayName": "workingGPT",
+    "watchapp": {
+      "onlyShownOnCommunication": false,
+      "hiddenApp": false,
+      "watchface": false
+    },
+    "targetPlatforms": [
+      "aplite",
+      "basalt",
+      "chalk"
+    ],
+    "capabilities": []
+  },
+  "name": "workingGPT"
+}
