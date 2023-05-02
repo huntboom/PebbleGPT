@@ -1,10 +1,12 @@
 Pebble.addEventListener("ready", function(e) {
   console.log("PebbleKit JS ready!");
-
   // Notify the watchapp that it is now safe to send messages
   Pebble.sendAppMessage({ "AppKeyReady": true });
 });
-
+Pebble.addEventListener("showConfiguration", function() {
+  var url = 'https://huntboom.github.io/pebble-config/';
+  Pebble.openURL(url);
+});
 Pebble.addEventListener("appmessage", function(e) {
   console.log("Received message: " + JSON.stringify(e.payload));
 
@@ -57,3 +59,6 @@ function makeRequest(content) {
 
   request.send(requestBody);
 }
+var configHtml = encodeURIComponent('<!DOCTYPE html><html><head><title>App Configuration</title><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><h1>Hello World</h1></body></html>');
+
+var configUrl = 'data:text/html;charset=utf-8,' + configHtml;

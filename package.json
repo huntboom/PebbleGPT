@@ -18,10 +18,12 @@
       "AppKeyTranscription": 1,
       "AppKeyResponse": 2
     },
+    "configurable":true,
     "enableMultiJS": false,
     "displayName": "workingGPT",
     "watchapp": {
       "onlyShownOnCommunication": false,
+      "configurable":true,
       "hiddenApp": false,
       "watchface": false
     },
@@ -30,7 +32,7 @@
       "basalt",
       "chalk"
     ],
-    "capabilities": []
+    "capabilities": ["configurable"]
   },
   "name": "workingGPT"
 }
