@@ -7,6 +7,14 @@ Pebble.addEventListener("showConfiguration", function() {
   var url = 'https://huntboom.github.io/pebble-config/';
   Pebble.openURL(url);
 });
+Pebble.addEventListener('webviewclosed', function(e) {
+  if (e.response) {
+    var configData = JSON.parse(decodeURIComponent(e.response));
+    if (configData.apiKey) {
+      localStorage.setItem('apiKey', configData.apiKey);
+    }
+  }
+});
 Pebble.addEventListener("appmessage", function(e) {
   console.log("Received message: " + JSON.stringify(e.payload));
 
@@ -34,15 +42,11 @@ function makeRequest(content) {
     // Send the response back to the watch
     Pebble.sendAppMessage({ "AppKeyResponse": displayText });
   };
-  var keyPart1 = "sk-l4f";
-  var keyPart2 = "9vwx6Ahr";
-  var keyPart3 = "3ZCN2ydF";
-  var keyPart4 = "UT3BlbkF";
-  var keyPart5 = "JoqIhsNO";
-  var keyPart6 = "XwRTPjjg";
-  var keyPart7 = "lSeYL";
-
-  var apiKey = keyPart1 + keyPart2 + keyPart3 + keyPart4 + keyPart5 + keyPart6 + keyPart7;
+  var apiKey = localStorage.getItem('apiKey');
+  if (!apiKey) {
+    console.log('API key not provided');
+    return;
+  }
   // Send the request
   request.open(method, url);
   request.setRequestHeader("Content-Type", "application/json");
