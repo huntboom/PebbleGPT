@@ -20,7 +20,7 @@
     },
     "configurable":true,
     "enableMultiJS": false,
-    "displayName": "workingGPT",
+    "displayName": "PebbleGPT",
     "watchapp": {
       "onlyShownOnCommunication": false,
       "configurable":true,

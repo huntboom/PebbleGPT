@@ -14,12 +14,14 @@ static ScrollLayer *s_scroll_layer;
 static DictationSession *s_dictation_session;
 static char s_last_text[20000];
 
-// Dictation API
 static void dictation_session_callback(DictationSession *session, DictationSessionStatus status,
                                        char *transcription, void *context) {
   if(status == DictationSessionStatusSuccess) {
     snprintf(s_last_text, sizeof(s_last_text), "Transcription:\n\n%s", transcription);
     text_layer_set_text(s_output_layer, s_last_text);
+
+    // Add loading message
+    text_layer_set_text(s_output_layer, "Message sent to OpenAI, awaiting response...");
 
     // Send the transcribed text to PebbleKit JS
     DictionaryIterator *out_iter;
@@ -42,7 +44,6 @@ static void dictation_session_callback(DictationSession *session, DictationSessi
     text_layer_set_text(s_output_layer, s_failed_buff);
   }
 }
-
 // App
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   dictation_session_start(s_dictation_session);
