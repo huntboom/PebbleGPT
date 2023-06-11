@@ -1,7 +1,8 @@
 # PebbleGPT - OpenAI-Powered Voice Assistant for Pebble Time
 
 This project provides an OpenAI GPT-3 powered voice assistant for the Pebble Time watch. The assistant listens for your voice input, sends the transcriptions to OpenAI's GPT-3, and displays the AI's response on the watch.
-
+## Rebble Store
+This app can be installed directly from the [Rebble Store](https://apps.rebble.io/en_US/application/64853961143b6504611fbc06).
 ## Code Overview
 
 The project is split into two main files:
@@ -14,7 +15,7 @@ The app communicates with the OpenAI GPT-3 model using a POST request, and the r
 
 ## Getting Started
 
-To use this project, you need to have an OpenAI API key. If you don't have one, you can obtain it by visiting [OpenAI's API key page](https://platform.openai.com/account/api-keys).
+To use this project, you need to have a Rebble Subscription for the voice transcriptions to work and an OpenAI API key. If you don't have one, you can obtain it by visiting [OpenAI's API key page](https://platform.openai.com/account/api-keys).
 
 ### Installation
 
