@@ -45,14 +45,23 @@ static void dictation_session_callback(DictationSession *session, DictationSessi
   }
 }
 // App
-static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
-  dictation_session_start(s_dictation_session);
-}
-
 static void scroll_to_top() {
   GPoint offset = GPointZero;
   scroll_layer_set_content_offset(s_scroll_layer, offset, true);
 }
+static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
+  // Clear the text layer
+  text_layer_set_text(s_output_layer, "");
+
+  // Add loading message
+  text_layer_set_text(s_output_layer, "Message sent to OpenAI, awaiting response...");
+
+  // Reset scroll window back to the top of the app for the next message
+  scroll_to_top();
+  dictation_session_start(s_dictation_session);
+}
+
+
 static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
   scroll_layer_scroll_up_click_handler(recognizer, s_scroll_layer);
 }
@@ -103,8 +112,6 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
     strncpy(s_last_text, response_tuple->value->cstring, sizeof(s_last_text) - 1);
     text_layer_set_text(s_output_layer, s_last_text);
 
-    // Reset scroll window back to the top of the app for the next message
-    scroll_to_top();
   }
 }
 
