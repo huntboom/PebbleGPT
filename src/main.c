@@ -116,6 +116,7 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   }
 }
 
+
 static void init() {
   s_main_window = window_create();
   window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -129,8 +130,10 @@ static void init() {
   // Open AppMessage communication
   app_message_register_inbox_received(inbox_received_handler);
   app_message_open(4096, 4096);
+  
+  // Start the dictation session after initializing the window
+  dictation_session_start(s_dictation_session);
 }
-
 static void deinit() {
   dictation_session_destroy(s_dictation_session);
   window_destroy(s_main_window);
