@@ -98,6 +98,7 @@ static void window_load(Window *window) {
    window_set_click_config_provider(s_main_window, click_config_provider);
   // Add the ScrollLayer to the window
   layer_add_child(window_layer, scroll_layer_get_layer(s_scroll_layer));
+  text_layer_enable_screen_text_flow_and_paging(s_output_layer, 5);
 }
 
 static void window_unload(Window *window) {
