@@ -98,7 +98,11 @@ static void window_load(Window *window) {
    window_set_click_config_provider(s_main_window, click_config_provider);
   // Add the ScrollLayer to the window
   layer_add_child(window_layer, scroll_layer_get_layer(s_scroll_layer));
-  text_layer_enable_screen_text_flow_and_paging(s_output_layer, 5);
+  #if defined(PBL_ROUND)
+    text_layer_enable_screen_text_flow_and_paging(s_output_layer,0);
+  #elif defined(PBL_RECT)
+    printf("This is a rectangular display");
+  #endif
 }
 
 static void window_unload(Window *window) {
@@ -108,15 +112,26 @@ static void window_unload(Window *window) {
 
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *response_tuple = dict_find(iter, AppKeyResponse);
-
   if (response_tuple) {
     strncpy(s_last_text, response_tuple->value->cstring, sizeof(s_last_text) - 1);
     text_layer_set_text(s_output_layer, s_last_text);
-
   }
 }
-
-
+//This init is for the version where you have to press select to start the voice dictation
+// static void init() {
+//   s_main_window = window_create();
+//   window_set_window_handlers(s_main_window, (WindowHandlers) {
+//     .load = window_load,
+//     .unload = window_unload,
+//   });
+//   window_stack_push(s_main_window, true);
+//
+//   s_dictation_session = dictation_session_create(sizeof(s_last_text), dictation_session_callback, NULL);
+//
+//   // Open AppMessage communication
+//   app_message_register_inbox_received(inbox_received_handler);
+//   app_message_open(4096, 4096);
+// }
 static void init() {
   s_main_window = window_create();
   window_set_window_handlers(s_main_window, (WindowHandlers) {
