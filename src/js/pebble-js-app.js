@@ -37,8 +37,14 @@ function makeRequest(content) {
 
     // Extract the response you want to display from the API response
     var response = JSON.parse(this.responseText);
-    var displayText = response.choices[0].message.content; // Change this to extract the desired text
-
+    if (response.error) {
+      // If it does, print the error message
+      var displayText = "Error: " + response.error.message;
+    }
+    else {
+      // Otherwise, extract the desired text
+      var displayText = response.choices[0].message.content;
+    }
     // Send the response back to the watch
     Pebble.sendAppMessage({ "AppKeyResponse": displayText });
   };
