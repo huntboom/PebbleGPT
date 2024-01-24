@@ -20,12 +20,12 @@
       "AppKeyTranscription": 1,
       "AppKeyResponse": 2
     },
-    "configurable":true,
+    "configurable": true,
     "enableMultiJS": true,
     "displayName": "PebbleGPT",
     "watchapp": {
       "onlyShownOnCommunication": false,
-      "configurable":true,
+      "configurable": true,
       "hiddenApp": false,
       "watchface": false
     },
@@ -34,7 +34,9 @@
       "basalt",
       "chalk"
     ],
-    "capabilities": ["configurable"]
+    "capabilities": [
+      "configurable"
+    ]
   },
   "name": "PebbleGPT"
 }
