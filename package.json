@@ -2,7 +2,9 @@
   "version": "1.3.0",
   "author": "huntboom",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "pebble-clay": "^1.0.4"
+  },
   "keywords": [
     "pebble-app"
   ],
@@ -19,7 +21,7 @@
       "AppKeyResponse": 2
     },
     "configurable":true,
-    "enableMultiJS": false,
+    "enableMultiJS": true,
     "displayName": "PebbleGPT",
     "watchapp": {
       "onlyShownOnCommunication": false,
