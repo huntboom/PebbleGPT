@@ -24,12 +24,10 @@
       "systemPrompt": 5,
       "temperature": 6
     },
-    "configurable": true,
     "enableMultiJS": true,
     "displayName": "PebbleGPT",
     "watchapp": {
       "onlyShownOnCommunication": false,
-      "configurable": true,
       "hiddenApp": false,
       "watchface": false
     },
