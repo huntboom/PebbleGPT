@@ -44,6 +44,7 @@ static void dictation_session_callback(DictationSession *session, DictationSessi
     text_layer_set_text(s_output_layer, s_failed_buff);
   }
 }
+
 // App
 static void scroll_to_top() {
   GPoint offset = GPointZero;
@@ -117,21 +118,7 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
     text_layer_set_text(s_output_layer, s_last_text);
   }
 }
-//This init is for the version where you have to press select to start the voice dictation
-// static void init() {
-//   s_main_window = window_create();
-//   window_set_window_handlers(s_main_window, (WindowHandlers) {
-//     .load = window_load,
-//     .unload = window_unload,
-//   });
-//   window_stack_push(s_main_window, true);
-//
-//   s_dictation_session = dictation_session_create(sizeof(s_last_text), dictation_session_callback, NULL);
-//
-//   // Open AppMessage communication
-//   app_message_register_inbox_received(inbox_received_handler);
-//   app_message_open(4096, 4096);
-// }
+
 static void init() {
   s_main_window = window_create();
   window_set_window_handlers(s_main_window, (WindowHandlers) {
