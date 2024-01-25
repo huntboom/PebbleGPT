@@ -1,4 +1,12 @@
-module.exports = [
+var Clay = require("pebble-clay");
+
+var CONFIG_KEY = "config";
+var API_KEY = "apiKey";
+var MODEL = "model";
+var SYSTEM_PROMPT = "systemPrompt";
+var TEMPERATURE = "temperature";
+
+var clayConfig = [
   {
     type: "heading",
     defaultValue: "PebbleGPT Configuration",
@@ -71,3 +79,32 @@ module.exports = [
     defaultValue: "Save Settings",
   },
 ];
+
+var clay = new Clay(clayConfig);
+
+// Fired when the configuration is saved
+Pebble.addEventListener("webviewclosed", function (e) {
+  if (e && !e.response) {
+    return;
+  }
+
+  var configData = JSON.parse(e.response);
+  var configValues = Object.keys(configData).reduce(function (result, key) {
+    result[key] = configData[key].value;
+    return result;
+  }, {});
+
+  localStorage.setItem(CONFIG_KEY, JSON.stringify(configValues));
+});
+
+function getConfig() {
+  return JSON.parse(localStorage.getItem(CONFIG_KEY));
+}
+
+module.exports = {
+  API_KEY,
+  MODEL,
+  SYSTEM_PROMPT,
+  TEMPERATURE,
+  getConfig,
+};

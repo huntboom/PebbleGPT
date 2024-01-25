@@ -18,7 +18,11 @@
     "messageKeys": {
       "AppKeyReady": 0,
       "AppKeyTranscription": 1,
-      "AppKeyResponse": 2
+      "AppKeyResponse": 2,
+      "apiKey": 3,
+      "model": 4,
+      "systemPrompt": 5,
+      "temperature": 6
     },
     "configurable": true,
     "enableMultiJS": true,
