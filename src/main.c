@@ -87,7 +87,7 @@ static void window_load(Window *window) {
   text_layer_set_text(s_output_layer, "Press Select to get input!");
   text_layer_set_text_alignment(s_output_layer, GTextAlignmentCenter);
   //set font
-  text_layer_set_font(s_output_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));
+  text_layer_set_font(s_output_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   // Create the ScrollLayer and set its content size
   s_scroll_layer = scroll_layer_create(bounds);
   scroll_layer_set_content_size(s_scroll_layer, GSize(bounds.size.w, 2000));
