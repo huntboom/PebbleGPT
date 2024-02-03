@@ -7,15 +7,18 @@ typedef enum {
   AppKeyReady = 0,
   AppKeyTranscription = 1,
   AppKeyResponse = 2,
+  AppKeyApiKey = 3,
   AppKeyVibrate = 7
 } AppKey;
 
 typedef struct Settings {
   bool vibrate;
+  bool apiKeySet;
 } Settings;
 
 static Settings settings = {
-  .vibrate = true
+  .vibrate = true,
+  .apiKeySet = false
 };
 
 static Window *s_main_window;
@@ -29,7 +32,6 @@ static void dictation_session_callback(DictationSession *session, DictationSessi
                                        char *transcription, void *context) {
   
   if (status != DictationSessionStatusSuccess) {
-    static char s_failed_buff[128];
     APP_LOG(APP_LOG_LEVEL_ERROR, "Transcription failed.\n\nError ID:\n%d", (int)status);
     return;
   }
@@ -137,6 +139,12 @@ static void config_handler(DictionaryIterator *iter) {
     settings.vibrate = (vibrate_tuple->value->int32 == 1);
   }
 
+  Tuple *apiKey_tuple = dict_find(iter, AppKeyApiKey);
+
+  if (apiKey_tuple) {
+    settings.apiKeySet = strlen(apiKey_tuple->value->cstring) != 0;
+  }
+
   persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 
@@ -146,6 +154,7 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 }
 
 static void init() {
+  // Read settings stored on the watch
   persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
   
   s_main_window = window_create();
@@ -155,11 +164,17 @@ static void init() {
   });
   window_stack_push(s_main_window, true);
 
-  s_dictation_session = dictation_session_create(sizeof(s_last_text), dictation_session_callback, NULL);
-
   // Open AppMessage communication
   app_message_register_inbox_received(inbox_received_handler);
   app_message_open(4096, 4096);
+
+  // On first run, if API key not set, just show message instead of starting dictation
+  if (!settings.apiKeySet) {
+    text_layer_set_text(s_output_layer, "Set OpenAI API Key in Settings, then restart app");
+    return;
+  }
+
+  s_dictation_session = dictation_session_create(sizeof(s_last_text), dictation_session_callback, NULL);
   
   // Don't start dictation if user opens settings on the phone
   if (launch_reason() == APP_LAUNCH_PHONE) {
