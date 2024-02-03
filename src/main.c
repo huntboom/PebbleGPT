@@ -16,32 +16,34 @@ static char s_last_text[20000];
 
 static void dictation_session_callback(DictationSession *session, DictationSessionStatus status,
                                        char *transcription, void *context) {
-  if (status == DictationSessionStatusSuccess) {
-    snprintf(s_last_text, sizeof(s_last_text), "Transcription:\n\n%s", transcription);
-    text_layer_set_text(s_output_layer, s_last_text);
-
-    // Add loading message
-    text_layer_set_text(s_output_layer, "Message sent to OpenAI, awaiting response...");
-
-    // Send the transcribed text to PebbleKit JS
-    DictionaryIterator *out_iter;
-    AppMessageResult result = app_message_outbox_begin(&out_iter);
-
-    if (result == APP_MSG_OK) {
-      dict_write_cstring(out_iter, AppKeyTranscription, transcription);
-      result = app_message_outbox_send();
-
-      if (result != APP_MSG_OK) {
-        APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending transcription to PebbleKit JS: %d", (int)result);
-      }
-    } else {
-      APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing outbound message: %d", (int)result);
-    }
-
-  } else {
+  
+  if (status != DictationSessionStatusSuccess) {
     static char s_failed_buff[128];
     snprintf(s_failed_buff, sizeof(s_failed_buff), "Transcription failed.\n\nError ID:\n%d", (int)status);
     text_layer_set_text(s_output_layer, s_failed_buff);
+    return;
+  }
+
+  snprintf(s_last_text, sizeof(s_last_text), "Transcription:\n\n%s", transcription);
+  text_layer_set_text(s_output_layer, s_last_text);
+
+  // Add loading message
+  text_layer_set_text(s_output_layer, "Message sent to OpenAI, awaiting response...");
+
+  // Send the transcribed text to PebbleKit JS
+  DictionaryIterator *out_iter;
+  AppMessageResult result = app_message_outbox_begin(&out_iter);
+
+  if (result != APP_MSG_OK) {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing outbound message: %d", (int)result);
+    return;
+  }
+  
+  dict_write_cstring(out_iter, AppKeyTranscription, transcription);
+  result = app_message_outbox_send();
+
+  if (result != APP_MSG_OK) {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending transcription to PebbleKit JS: %d", (int)result);
   }
 }
 
@@ -138,6 +140,7 @@ static void init() {
   // Start the dictation session after initializing the window
   dictation_session_start(s_dictation_session);
 }
+
 static void deinit() {
   dictation_session_destroy(s_dictation_session);
   window_destroy(s_main_window);
