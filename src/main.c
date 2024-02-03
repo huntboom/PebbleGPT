@@ -89,7 +89,7 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  s_output_layer = text_layer_create(GRect(0, 0, bounds.size.w, 2000)); // Increase height to 2000 to accommodate large texts
+  s_output_layer = text_layer_create(GRect(4, 4, bounds.size.w - 8, 2000)); // Increase height to 2000 to accommodate large texts
   text_layer_set_text(s_output_layer, "Press Select to get input!");
   text_layer_set_text_alignment(s_output_layer, GTextAlignmentCenter);
   //set font
