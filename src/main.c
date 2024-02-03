@@ -16,7 +16,7 @@ static char s_last_text[20000];
 
 static void dictation_session_callback(DictationSession *session, DictationSessionStatus status,
                                        char *transcription, void *context) {
-  if(status == DictationSessionStatusSuccess) {
+  if (status == DictationSessionStatusSuccess) {
     snprintf(s_last_text, sizeof(s_last_text), "Transcription:\n\n%s", transcription);
     text_layer_set_text(s_output_layer, s_last_text);
 
@@ -50,6 +50,7 @@ static void scroll_to_top() {
   GPoint offset = GPointZero;
   scroll_layer_set_content_offset(s_scroll_layer, offset, true);
 }
+
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   // Clear the text layer
   text_layer_set_text(s_output_layer, "");
@@ -61,7 +62,6 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   scroll_to_top();
   dictation_session_start(s_dictation_session);
 }
-
 
 static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
   scroll_layer_scroll_up_click_handler(recognizer, s_scroll_layer);
@@ -79,6 +79,7 @@ static void click_config_provider(void *context) {
   // Add the select button click handler
   window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
 }
+
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
@@ -96,7 +97,7 @@ static void window_load(Window *window) {
   scroll_layer_add_child(s_scroll_layer, text_layer_get_layer(s_output_layer));
 
   // Set the click configuration provider 
-   window_set_click_config_provider(s_main_window, click_config_provider);
+  window_set_click_config_provider(s_main_window, click_config_provider);
   // Add the ScrollLayer to the window
   layer_add_child(window_layer, scroll_layer_get_layer(s_scroll_layer));
   #if defined(PBL_ROUND)
@@ -113,6 +114,7 @@ static void window_unload(Window *window) {
 
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *response_tuple = dict_find(iter, AppKeyResponse);
+  
   if (response_tuple) {
     strncpy(s_last_text, response_tuple->value->cstring, sizeof(s_last_text) - 1);
     text_layer_set_text(s_output_layer, s_last_text);
