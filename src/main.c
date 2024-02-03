@@ -24,9 +24,6 @@ static void dictation_session_callback(DictationSession *session, DictationSessi
     return;
   }
 
-  snprintf(s_last_text, sizeof(s_last_text), "Transcription:\n\n%s", transcription);
-  text_layer_set_text(s_output_layer, s_last_text);
-
   // Add loading message
   text_layer_set_text(s_output_layer, "Message sent to OpenAI, awaiting response...");
 
@@ -53,33 +50,30 @@ static void scroll_to_top() {
   scroll_layer_set_content_offset(s_scroll_layer, offset, true);
 }
 
-static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
+static void start_new_prompt(ClickRecognizerRef recognizer, void *context) {
   // Clear the text layer
   text_layer_set_text(s_output_layer, "");
-
-  // Add loading message
-  text_layer_set_text(s_output_layer, "Message sent to OpenAI, awaiting response...");
 
   // Reset scroll window back to the top of the app for the next message
   scroll_to_top();
   dictation_session_start(s_dictation_session);
 }
 
-static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
+static void scroll_text_up(ClickRecognizerRef recognizer, void *context) {
   scroll_layer_scroll_up_click_handler(recognizer, s_scroll_layer);
 }
 
-static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
+static void scroll_text_down(ClickRecognizerRef recognizer, void *context) {
   scroll_layer_scroll_down_click_handler(recognizer, s_scroll_layer);
 }
 
 static void click_config_provider(void *context) {
   // Set up the up and down buttons for scrolling
-  window_single_repeating_click_subscribe(BUTTON_ID_UP, 100, up_click_handler);
-  window_single_repeating_click_subscribe(BUTTON_ID_DOWN, 100, down_click_handler);
+  window_single_repeating_click_subscribe(BUTTON_ID_UP, 100, scroll_text_up);
+  window_single_repeating_click_subscribe(BUTTON_ID_DOWN, 100, scroll_text_down);
 
   // Add the select button click handler
-  window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
+  window_single_click_subscribe(BUTTON_ID_SELECT, start_new_prompt);
 }
 
 static void window_load(Window *window) {
