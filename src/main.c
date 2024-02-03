@@ -124,6 +124,8 @@ static void response_handler(DictionaryIterator *iter) {
     strncpy(s_last_text, response_tuple->value->cstring, sizeof(s_last_text) - 1);
     text_layer_set_text(s_output_layer, s_last_text);
 
+    light_enable_interaction();
+    
     if (settings.vibrate) {
       static const uint32_t const segments[] = {100};
       VibePattern pat = {segments, 1};
