@@ -1,11 +1,22 @@
 #include <pebble.h>
 
+// Persistent storage key
+#define SETTINGS_KEY 1
+
 typedef enum {
   AppKeyReady = 0,
   AppKeyTranscription = 1,
-  AppKeyResponse = 2
+  AppKeyResponse = 2,
+  AppKeyVibrate = 7
 } AppKey;
 
+typedef struct Settings {
+  bool vibrate;
+} Settings;
+
+static Settings settings = {
+  .vibrate = true
+};
 
 static Window *s_main_window;
 static TextLayer *s_output_layer;
@@ -19,8 +30,7 @@ static void dictation_session_callback(DictationSession *session, DictationSessi
   
   if (status != DictationSessionStatusSuccess) {
     static char s_failed_buff[128];
-    snprintf(s_failed_buff, sizeof(s_failed_buff), "Transcription failed.\n\nError ID:\n%d", (int)status);
-    text_layer_set_text(s_output_layer, s_failed_buff);
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Transcription failed.\n\nError ID:\n%d", (int)status);
     return;
   }
 
@@ -51,9 +61,6 @@ static void scroll_to_top() {
 }
 
 static void start_new_prompt(ClickRecognizerRef recognizer, void *context) {
-  // Clear the text layer
-  text_layer_set_text(s_output_layer, "");
-
   // Reset scroll window back to the top of the app for the next message
   scroll_to_top();
   dictation_session_start(s_dictation_session);
@@ -108,16 +115,39 @@ static void window_unload(Window *window) {
   scroll_layer_destroy(s_scroll_layer);
 }
 
-static void inbox_received_handler(DictionaryIterator *iter, void *context) {
+static void response_handler(DictionaryIterator *iter) {
   Tuple *response_tuple = dict_find(iter, AppKeyResponse);
-  
+
   if (response_tuple) {
     strncpy(s_last_text, response_tuple->value->cstring, sizeof(s_last_text) - 1);
     text_layer_set_text(s_output_layer, s_last_text);
+
+    if (settings.vibrate) {
+      static const uint32_t const segments[] = {100};
+      VibePattern pat = {segments, 1};
+      vibes_enqueue_custom_pattern(pat);
+    }
   }
 }
 
+static void config_handler(DictionaryIterator *iter) {
+  Tuple *vibrate_tuple = dict_find(iter, AppKeyVibrate);
+
+  if (vibrate_tuple) {
+    settings.vibrate = (vibrate_tuple->value->int32 == 1);
+  }
+
+  persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
+}
+
+static void inbox_received_handler(DictionaryIterator *iter, void *context) {
+  response_handler(iter);
+  config_handler(iter);
+}
+
 static void init() {
+  persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
+  
   s_main_window = window_create();
   window_set_window_handlers(s_main_window, (WindowHandlers) {
     .load = window_load,
@@ -131,7 +161,12 @@ static void init() {
   app_message_register_inbox_received(inbox_received_handler);
   app_message_open(4096, 4096);
   
-  // Start the dictation session after initializing the window
+  // Don't start dictation if user opens settings on the phone
+  if (launch_reason() == APP_LAUNCH_PHONE) {
+    return;
+  }
+
+  // Start dictation
   dictation_session_start(s_dictation_session);
 }
 

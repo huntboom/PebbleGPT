@@ -72,6 +72,12 @@ var clayConfig = [
         max: 2,
         step: 0.1,
       },
+      {
+        type: 'toggle',
+        messageKey: 'vibrate',
+        label: 'Vibrate on response',
+        defaultValue: true
+      }
     ],
   },
   {
