@@ -1,25 +1,6 @@
 #include <pebble.h>
-
-// Persistent storage key
-#define SETTINGS_KEY 1
-
-typedef enum {
-  AppKeyReady = 0,
-  AppKeyTranscription = 1,
-  AppKeyResponse = 2,
-  AppKeyApiKey = 3,
-  AppKeyVibrate = 7
-} AppKey;
-
-typedef struct Settings {
-  bool vibrate;
-  bool apiKeySet;
-} Settings;
-
-static Settings settings = {
-  .vibrate = true,
-  .apiKeySet = false
-};
+#include <messages.h>
+#include <settings.h>
 
 static Window *s_main_window;
 static TextLayer *s_output_layer;
@@ -126,28 +107,12 @@ static void response_handler(DictionaryIterator *iter) {
 
     light_enable_interaction();
     
-    if (settings.vibrate) {
+    if (get_settings().vibrate) {
       static const uint32_t const segments[] = {100};
       VibePattern pat = {segments, 1};
       vibes_enqueue_custom_pattern(pat);
     }
   }
-}
-
-static void config_handler(DictionaryIterator *iter) {
-  Tuple *vibrate_tuple = dict_find(iter, AppKeyVibrate);
-
-  if (vibrate_tuple) {
-    settings.vibrate = (vibrate_tuple->value->int32 == 1);
-  }
-
-  Tuple *apiKey_tuple = dict_find(iter, AppKeyApiKey);
-
-  if (apiKey_tuple) {
-    settings.apiKeySet = strlen(apiKey_tuple->value->cstring) != 0;
-  }
-
-  persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
@@ -156,8 +121,7 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 }
 
 static void init() {
-  // Read settings stored on the watch
-  persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
+  init_settings();
   
   s_main_window = window_create();
   window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -171,7 +135,7 @@ static void init() {
   app_message_open(4096, 4096);
 
   // On first run, if API key not set, just show message instead of starting dictation
-  if (!settings.apiKeySet) {
+  if (!get_settings().apiKeySet) {
     text_layer_set_text(s_output_layer, "Set OpenAI API Key in Settings, then restart app");
     return;
   }
