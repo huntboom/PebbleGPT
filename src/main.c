@@ -2,10 +2,11 @@
 #include <messages.h>
 #include <settings.h>
 #include <ui.h>
+#include <messages.h>
 
+const uint32_t MAX_DICTATION = 20000;
 
 static DictationSession *s_dictation_session;
-static char s_last_text[20000];
 
 static void dictation_session_callback(DictationSession *session, DictationSessionStatus status,
                                        char *transcription, void *context) {
@@ -15,24 +16,9 @@ static void dictation_session_callback(DictationSession *session, DictationSessi
     return;
   }
 
-  // Add loading message
   set_text("Message sent to OpenAI, awaiting response...");
 
-  // Send the transcribed text to PebbleKit JS
-  DictionaryIterator *out_iter;
-  AppMessageResult result = app_message_outbox_begin(&out_iter);
-
-  if (result != APP_MSG_OK) {
-    APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing outbound message: %d", (int)result);
-    return;
-  }
-  
-  dict_write_cstring(out_iter, AppKeyTranscription, transcription);
-  result = app_message_outbox_send();
-
-  if (result != APP_MSG_OK) {
-    APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending transcription to PebbleKit JS: %d", (int)result);
-  }
+  send_to_phone(AppKeyTranscription, transcription);
 }
 
 static void start_new_prompt(ClickRecognizerRef recognizer, void *context) {
@@ -41,8 +27,7 @@ static void start_new_prompt(ClickRecognizerRef recognizer, void *context) {
   dictation_session_start(s_dictation_session);
 }
 
-
-static void response_handler(DictionaryIterator *iter) {
+static void gpt_response_handler(DictionaryIterator *iter) {
   Tuple *response_tuple = dict_find(iter, AppKeyResponse);
 
   if (response_tuple) {
@@ -58,20 +43,12 @@ static void response_handler(DictionaryIterator *iter) {
   }
 }
 
-static void inbox_received_handler(DictionaryIterator *iter, void *context) {
-  response_handler(iter);
-  config_handler(iter);
-}
-
 static void init() {
   init_settings();
   init_ui(start_new_prompt);
-
-  set_text("Press Select to get input!");
-
-  // Open AppMessage communication
-  app_message_register_inbox_received(inbox_received_handler);
-  app_message_open(4096, 4096);
+  
+  MessageHandler handlers[] = {gpt_response_handler, config_handler};
+  init_messages(handlers);
 
   // On first run, if API key not set, just show message instead of starting dictation
   if (!get_settings().apiKeySet) {
@@ -79,7 +56,9 @@ static void init() {
     return;
   }
 
-  s_dictation_session = dictation_session_create(sizeof(s_last_text), dictation_session_callback, NULL);
+  set_text("Press Select to get input!");
+  
+  s_dictation_session = dictation_session_create(MAX_DICTATION, dictation_session_callback, NULL);
   
   // Don't start dictation if user opens settings on the phone
   if (launch_reason() == APP_LAUNCH_PHONE) {

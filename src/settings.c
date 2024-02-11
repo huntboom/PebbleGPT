@@ -2,7 +2,10 @@
 #include <messages.h>
 #include <settings.h>
 
-static Settings settings = {.vibrate = true, .apiKeySet = false};
+static Settings settings = {
+  .vibrate = true, 
+  .apiKeySet = false
+};
 
 void config_handler(DictionaryIterator *iter) {
   Tuple *vibrate_tuple = dict_find(iter, AppKeyVibrate);
