@@ -74,3 +74,9 @@ void scroll_to_top() {
   GPoint offset = GPointZero;
   scroll_layer_set_content_offset(s_scroll_layer, offset, true);
 }
+
+void short_vibe() {
+  static const uint32_t const segments[] = {100};
+  VibePattern pat = {segments, 1};
+  vibes_enqueue_custom_pattern(pat);
+}

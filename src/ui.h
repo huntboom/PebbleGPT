@@ -6,3 +6,5 @@ void cleanup_ui();
 void set_text(char* text);
 
 void scroll_to_top();
+
+void short_vibe();

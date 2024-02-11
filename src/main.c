@@ -36,9 +36,7 @@ static void gpt_response_handler(DictionaryIterator *iter) {
     light_enable_interaction();
     
     if (get_settings().vibrate) {
-      static const uint32_t const segments[] = {100};
-      VibePattern pat = {segments, 1};
-      vibes_enqueue_custom_pattern(pat);
+      short_vibe();
     }
   }
 }
