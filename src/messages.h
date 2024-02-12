@@ -1,7 +1,6 @@
 #ifndef MESSAGES
 #define MESSAGES
 typedef enum {
-  AppKeyReady = 0,
   AppKeyTranscription = 1,
   AppKeyResponse = 2,
   AppKeyApiKey = 3,

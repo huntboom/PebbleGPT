@@ -1,12 +1,12 @@
-var Clay = require("pebble-clay");
+const Clay = require("pebble-clay");
 
-var CONFIG_KEY = "config";
-var API_KEY = "apiKey";
-var MODEL = "model";
-var SYSTEM_PROMPT = "systemPrompt";
-var TEMPERATURE = "temperature";
+const CONFIG_KEY = "config";
+const API_KEY = "apiKey";
+const MODEL = "model";
+const SYSTEM_PROMPT = "systemPrompt";
+const TEMPERATURE = "temperature";
 
-var clayConfig = [
+const clayConfig = [
   {
     type: "heading",
     defaultValue: "PebbleGPT Configuration",
@@ -86,7 +86,7 @@ var clayConfig = [
   },
 ];
 
-var clay = new Clay(clayConfig);
+const clay = new Clay(clayConfig);
 
 // Fired when the configuration is saved
 Pebble.addEventListener("webviewclosed", function (e) {
@@ -94,8 +94,8 @@ Pebble.addEventListener("webviewclosed", function (e) {
     return;
   }
 
-  var configData = JSON.parse(e.response);
-  var configValues = Object.keys(configData).reduce(function (result, key) {
+  const configData = JSON.parse(e.response);
+  const configValues = Object.keys(configData).reduce(function (result, key) {
     result[key] = configData[key].value;
     return result;
   }, {});
