@@ -3,31 +3,21 @@
 #include <settings.h>
 #include <ui.h>
 #include <messages.h>
+#include <transcription.h>
 
-const uint32_t MAX_DICTATION = 20000;
-
-static DictationSession *s_dictation_session;
-
-static void dictation_session_callback(DictationSession *session, DictationSessionStatus status,
-                                       char *transcription, void *context) {
-  
-  if (status != DictationSessionStatusSuccess) {
-    APP_LOG(APP_LOG_LEVEL_ERROR, "Transcription failed. Error ID: %d", (int)status);
-    return;
-  }
-
+static void on_transcription(char* transcription) {
   set_text("Message sent to OpenAI, awaiting response...");
 
   send_to_phone(AppKeyTranscription, transcription);
 }
 
-static void start_new_prompt(ClickRecognizerRef recognizer, void *context) {
+static void start_new_prompt() {
   // Reset scroll window back to the top of the app for the next message
   scroll_to_top();
-  dictation_session_start(s_dictation_session);
+  start_transcription(on_transcription);
 }
 
-static void gpt_response_handler(DictionaryIterator *iter) {
+static void on_gpt_response(DictionaryIterator *iter) {
   Tuple *response_tuple = dict_find(iter, AppKeyResponse);
 
   if (response_tuple) {
@@ -45,7 +35,7 @@ static void init() {
   init_settings();
   init_ui(start_new_prompt);
   
-  MessageHandler handlers[] = {gpt_response_handler, config_handler};
+  MessageHandler handlers[] = {on_gpt_response, on_config_received};
   init_messages(handlers);
 
   // On first run, if API key not set, just show message instead of starting dictation
@@ -56,19 +46,16 @@ static void init() {
 
   set_text("Press Select to get input!");
   
-  s_dictation_session = dictation_session_create(MAX_DICTATION, dictation_session_callback, NULL);
-  
   // Don't start dictation if user opens settings on the phone
   if (launch_reason() == APP_LAUNCH_PHONE) {
     return;
   }
 
   // Start dictation
-  dictation_session_start(s_dictation_session);
+  start_new_prompt();
 }
 
 static void deinit() {
-  dictation_session_destroy(s_dictation_session);
   cleanup_ui();
 }
 

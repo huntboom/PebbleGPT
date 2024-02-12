@@ -8,7 +8,7 @@ typedef struct Settings {
   bool apiKeySet;
 } Settings;
 
-void config_handler(DictionaryIterator *iter);
+void on_config_received(DictionaryIterator *iter);
 
 void init_settings();
 
