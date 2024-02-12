@@ -2,7 +2,6 @@
 #include <messages.h>
 #include <settings.h>
 #include <ui.h>
-#include <messages.h>
 #include <transcription.h>
 
 static void on_transcription(char* transcription) {
@@ -12,7 +11,6 @@ static void on_transcription(char* transcription) {
 }
 
 static void start_new_prompt() {
-  // Reset scroll window back to the top of the app for the next message
   scroll_to_top();
   start_transcription(on_transcription);
 }
@@ -34,9 +32,7 @@ static void on_gpt_response(DictionaryIterator *iter) {
 static void init() {
   init_settings();
   init_ui(start_new_prompt);
-  
-  MessageHandler handlers[] = {on_gpt_response, on_config_received};
-  init_messages(handlers);
+  init_messages(((MessageHandler[]){on_gpt_response, on_settings_received}));
 
   // On first run, if API key not set, just show message instead of starting dictation
   if (!get_settings().apiKeySet) {

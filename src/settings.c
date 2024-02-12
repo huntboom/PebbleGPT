@@ -7,7 +7,7 @@ static Settings settings = {
   .apiKeySet = false
 };
 
-void on_config_received(DictionaryIterator *iter) {
+void on_settings_received(DictionaryIterator *iter) {
   Tuple *vibrate_tuple = dict_find(iter, AppKeyVibrate);
 
   if (vibrate_tuple) {
