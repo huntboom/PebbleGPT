@@ -2,7 +2,9 @@
   "version": "1.3.0",
   "author": "huntboom",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "pebble-clay": "^1.0.4"
+  },
   "keywords": [
     "pebble-app"
   ],
@@ -14,16 +16,18 @@
     "projectType": "native",
     "uuid": "1500ee62-ceec-4a19-8745-73e0b505f85a",
     "messageKeys": {
-      "AppKeyReady": 0,
       "AppKeyTranscription": 1,
-      "AppKeyResponse": 2
+      "AppKeyResponse": 2,
+      "apiKey": 3,
+      "model": 4,
+      "systemPrompt": 5,
+      "temperature": 6,
+      "vibrate": 7
     },
-    "configurable":true,
-    "enableMultiJS": false,
+    "enableMultiJS": true,
     "displayName": "PebbleGPT",
     "watchapp": {
       "onlyShownOnCommunication": false,
-      "configurable":true,
       "hiddenApp": false,
       "watchface": false
     },
@@ -32,7 +36,9 @@
       "basalt",
       "chalk"
     ],
-    "capabilities": ["configurable"]
+    "capabilities": [
+      "configurable"
+    ]
   },
   "name": "PebbleGPT"
 }
