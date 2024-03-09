@@ -1,4 +1,4 @@
-const {
+var {
   getConfig,
   API_KEY,
   SYSTEM_PROMPT,
@@ -7,29 +7,29 @@ const {
 } = require("./config");
 
 // hold received responses for the duration of the chat session
-const messages = [];
+var messages = [];
 
 function makeOpenaiRequest(prompt, onResponse, onError) {
-  const config = getConfig();
+  var config = getConfig();
 
   if (!config[API_KEY]) {
     return;
   }
 
-  const method = "POST";
-  const url = "https://api.openai.com/v1/chat/completions";
+  var method = "POST";
+  var url = "https://api.openai.com/v1/chat/completions";
 
-  const request = new XMLHttpRequest();
+  var request = new XMLHttpRequest();
 
   request.onload = function () {
-    const responseBody = JSON.parse(this.responseText);
+    var responseBody = JSON.parse(this.responseText);
 
     if (responseBody.error) {
       onError(responseBody.error.message);
       return;
     }
 
-    const chatCompletion = responseBody.choices[0].message.content;
+    var chatCompletion = responseBody.choices[0].message.content;
     messages.push({ role: "assistant", content: chatCompletion });
     onResponse(chatCompletion);
   };
@@ -45,7 +45,7 @@ function makeOpenaiRequest(prompt, onResponse, onError) {
 
   messages.push({ role: "user", content: prompt });
 
-  const requestBody = JSON.stringify({
+  var requestBody = JSON.stringify({
     model: config[MODEL],
     messages,
     temperature: config[TEMPERATURE],

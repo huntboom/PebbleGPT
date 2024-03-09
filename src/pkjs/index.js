@@ -1,4 +1,4 @@
-const { makeOpenaiRequest } = require("./openai");
+var { makeOpenaiRequest } = require("./openai");
 
 Pebble.addEventListener("appmessage", function (e) {
   function onError(errorText) {
