@@ -1,5 +1,5 @@
 {
-  "version": "1.5.0",
+  "version": "1.6.0",
   "author": "huntboom",
   "private": true,
   "dependencies": {
@@ -24,7 +24,8 @@
       "temperature": 6,
       "vibrate": 7,
       "apiProvider": 8,
-      "claudeApiKey": 9
+      "claudeApiKey": 9,
+      "geminiApiKey": 10
     },
     "enableMultiJS": true,
     "displayName": "PebbleGPT",

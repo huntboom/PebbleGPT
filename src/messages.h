@@ -6,7 +6,8 @@ typedef enum {
   AppKeyApiKey = 3,
   AppKeyVibrate = 7,
   AppKeyApiProvider = 8,
-  AppKeyClaudeApiKey = 9
+  AppKeyClaudeApiKey = 9,
+  AppKeyGeminiApiKey = 10
 } AppKey;
 #endif
 
@@ -19,4 +20,3 @@ void _init_messages(MessageHandler[], int);
 
 /// Send a message to PebbleKit on the phone
 void send_to_phone(AppKey key, char* value);
-

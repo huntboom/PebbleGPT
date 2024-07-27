@@ -4,7 +4,10 @@
 
 static Settings settings = {
   .vibrate = true, 
-  .apiKeySet = false
+  .apiKeySet = false,
+  .apiProvider = "openai",
+  .claudeApiKeySet = false,
+  .geminiApiKeySet = false
 };
 
 void on_settings_received(DictionaryIterator *iter) {
@@ -18,6 +21,21 @@ void on_settings_received(DictionaryIterator *iter) {
 
   if (apiKey_tuple) {
     settings.apiKeySet = strlen(apiKey_tuple->value->cstring) != 0;
+  }
+
+  Tuple *provider_tuple = dict_find(iter, AppKeyApiProvider);
+  if (provider_tuple) {
+    strncpy(settings.apiProvider, provider_tuple->value->cstring, sizeof(settings.apiProvider) - 1);
+  }
+
+  Tuple *claude_api_key_tuple = dict_find(iter, AppKeyClaudeApiKey);
+  if (claude_api_key_tuple) {
+    settings.claudeApiKeySet = strlen(claude_api_key_tuple->value->cstring) != 0;
+  }
+
+  Tuple *gemini_api_key_tuple = dict_find(iter, AppKeyGeminiApiKey);
+  if (gemini_api_key_tuple) {
+    settings.geminiApiKeySet = strlen(gemini_api_key_tuple->value->cstring) != 0;
   }
 
   persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));

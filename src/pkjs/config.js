@@ -46,12 +46,21 @@ var clayConfig = [
         label: "Claude",
         value: "claude",
       },
+      {
+        label: "Gemini",
+        value: "gemini",
+      },
     ],
   },
   {
     type: "input",
     messageKey: "claudeApiKey",
     label: "Claude API key",
+  },
+  {
+  type: "input",
+  messageKey: "geminiApiKey",
+    label: "Gemini API key",
   },
   {
     type: "section",

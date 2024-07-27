@@ -16,6 +16,8 @@ function makeApiRequest(prompt, onResponse, onError) {
     makeOpenAIRequest(prompt, onResponse, onError);
   } else if (config[API_PROVIDER] === "claude") {
     makeClaudeRequest(prompt, onResponse, onError);
+  } else if (config[API_PROVIDER] === "gemini") {
+    makeGeminiRequest(prompt, onResponse, onError);
   } else {
     onError("Invalid API provider");
   }
@@ -113,6 +115,59 @@ function makeClaudeRequest(prompt, onResponse, onError) {
     model: "claude-3-5-sonnet-20240620",
     max_tokens: 1024,
     messages: claudeMessages
+  });
+
+  request.send(requestBody);
+}
+
+function makeGeminiRequest(prompt, onResponse, onError) {
+  var config = getConfig();
+
+  if (!config.geminiApiKey) {
+    onError("Gemini API key not set");
+    return;
+  }
+
+  var method = "POST";
+  var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+
+  var request = new XMLHttpRequest();
+
+  request.onload = function () {
+    if (this.status >= 200 && this.status < 300) {
+      var responseBody = JSON.parse(this.responseText);
+      var chatCompletion = responseBody.candidates[0].content.parts[0].text;
+      messages.push({ role: "model", content: chatCompletion });
+      onResponse(chatCompletion);
+    } else {
+      var errorBody = JSON.parse(this.responseText);
+      onError(errorBody.error ? errorBody.error.message : "Unknown error");
+    }
+  };
+
+  request.onerror = function () {
+    onError("Network error");
+  };
+
+  request.open(method, url + "?key=" + config.geminiApiKey);
+  request.setRequestHeader("Content-Type", "application/json");
+
+  var requestBody = JSON.stringify({
+    contents: [
+      {
+        parts: [
+          {
+            text: prompt
+          }
+        ]
+      }
+    ],
+    generationConfig: {
+      temperature: config[TEMPERATURE],
+      topK: 1,
+      topP: 1,
+      maxOutputTokens: 2048,
+    }
   });
 
   request.send(requestBody);

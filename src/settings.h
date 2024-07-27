@@ -8,6 +8,7 @@ typedef struct Settings {
   bool apiKeySet;
   char apiProvider[10];
   bool claudeApiKeySet;
+  bool geminiApiKeySet;  // Added this line
 } Settings;
 
 void on_settings_received(DictionaryIterator *iter);

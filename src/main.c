@@ -34,9 +34,9 @@ static void init() {
   init_ui(start_new_prompt);
   init_messages(((MessageHandler[]){on_gpt_response, on_settings_received}));
 
-  // On first run, if API key not set, just show message instead of starting dictation
-  if (!get_settings().apiKeySet) {
-    set_text("Set OpenAI API Key in Settings, then restart app");
+  // On first run, if no API key is set, just show message instead of starting dictation
+  if (!get_settings().apiKeySet && !get_settings().claudeApiKeySet && !get_settings().geminiApiKeySet) {
+    set_text("Set an API Key in Settings, then restart app");
     return;
   }
 
