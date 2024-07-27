@@ -1,4 +1,10 @@
-var { makeApiRequest } = require("./api");
+var { makeApiRequest, resetMessages } = require("./api");
+
+// Call resetMessages() when starting a new conversation
+// For example, you might do this when the app is opened or when a new chat is started
+Pebble.addEventListener("ready", function(e) {
+  resetMessages();
+});
 
 Pebble.addEventListener("appmessage", function (e) {
   function onError(errorText) {

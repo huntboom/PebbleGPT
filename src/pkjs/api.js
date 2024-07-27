@@ -100,15 +100,32 @@ function makeClaudeRequest(prompt, onResponse, onError) {
   request.setRequestHeader("anthropic-version", "2023-06-01");
   request.setRequestHeader("content-type", "application/json");
 
-  messages.push({ role: "user", content: prompt });
+  // Ensure the first message is always a user message
+  var claudeMessages = [];
+  if (messages.length === 0 || messages[0].role !== "user") {
+    claudeMessages.push({ role: "user", content: prompt });
+  } else {
+    claudeMessages = messages.slice();
+    claudeMessages.push({ role: "user", content: prompt });
+  }
 
   var requestBody = JSON.stringify({
     model: "claude-3-5-sonnet-20240620",
     max_tokens: 1024,
-    messages: messages
+    messages: claudeMessages
   });
 
   request.send(requestBody);
 }
 
-module.exports = { makeApiRequest };
+function resetMessages() {
+  messages = [];
+}
+
+// Call this function at the start of each new conversation
+function startNewConversation(prompt, onResponse, onError) {
+  resetMessages();
+  makeApiRequest(prompt, onResponse, onError);
+}
+
+module.exports = { makeApiRequest, resetMessages, startNewConversation };
