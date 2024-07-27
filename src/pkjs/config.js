@@ -5,7 +5,7 @@ var API_KEY = "apiKey";
 var MODEL = "model";
 var SYSTEM_PROMPT = "systemPrompt";
 var TEMPERATURE = "temperature";
-
+var API_PROVIDER = "apiProvider";
 var clayConfig = [
   {
     type: "heading",
@@ -31,6 +31,27 @@ var clayConfig = [
         label: "OpenAI API key",
       },
     ],
+  },
+  {
+    type: "select",
+    messageKey: "apiProvider",
+    defaultValue: "openai",
+    label: "API Provider",
+    options: [
+      {
+        label: "OpenAI",
+        value: "openai",
+      },
+      {
+        label: "Claude",
+        value: "claude",
+      },
+    ],
+  },
+  {
+    type: "input",
+    messageKey: "claudeApiKey",
+    label: "Claude API key",
   },
   {
     type: "section",
@@ -109,6 +130,7 @@ function getConfig() {
 
 module.exports = {
   API_KEY,
+  API_PROVIDER,
   MODEL,
   SYSTEM_PROMPT,
   TEMPERATURE,

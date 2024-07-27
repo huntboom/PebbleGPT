@@ -1,4 +1,4 @@
-var { makeOpenaiRequest } = require("./openai");
+var { makeApiRequest } = require("./api");
 
 Pebble.addEventListener("appmessage", function (e) {
   function onError(errorText) {
@@ -10,6 +10,6 @@ Pebble.addEventListener("appmessage", function (e) {
   }
 
   if (e.payload.AppKeyTranscription) {
-    makeOpenaiRequest(e.payload.AppKeyTranscription, onResponse, onError);
+    makeApiRequest(e.payload.AppKeyTranscription, onResponse, onError);
   }
 });

@@ -5,7 +5,7 @@
 #include <transcription.h>
 
 static void on_transcription(char* transcription) {
-  set_text("Message sent to OpenAI, awaiting response...");
+  set_text("Message sent to AI, awaiting response...");
 
   send_to_phone(AppKeyTranscription, transcription);
 }

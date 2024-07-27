@@ -22,7 +22,9 @@
       "model": 4,
       "systemPrompt": 5,
       "temperature": 6,
-      "vibrate": 7
+      "vibrate": 7,
+      "apiProvider": 8,
+      "claudeApiKey": 9
     },
     "enableMultiJS": true,
     "displayName": "PebbleGPT",

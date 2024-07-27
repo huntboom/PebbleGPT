@@ -4,7 +4,9 @@ typedef enum {
   AppKeyTranscription = 1,
   AppKeyResponse = 2,
   AppKeyApiKey = 3,
-  AppKeyVibrate = 7
+  AppKeyVibrate = 7,
+  AppKeyApiProvider = 8,
+  AppKeyClaudeApiKey = 9
 } AppKey;
 #endif
 
