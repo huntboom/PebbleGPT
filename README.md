@@ -1,21 +1,25 @@
-# PebbleGPT - OpenAI-Powered Voice Assistant for Pebble Time
+# PebbleGPT - AI-Powered Voice Assistant for Pebble Time
 
-This project provides an OpenAI GPT-3 powered voice assistant for the Pebble Time watch. The assistant listens for your voice input, sends the transcriptions to OpenAI's GPT-3, and displays the AI's response on the watch.
+This project provides an AI-powered voice assistant for the Pebble Time watch. The assistant listens for your voice input, sends the transcriptions to either OpenAI's GPT or Anthropic's Claude API, and displays the AI's response on the watch.
+
 ## Rebble Store
 This app can be installed directly from the [Rebble Store](https://apps.rebble.io/en_US/application/64853961143b6504611fbc06).
+
 ## Code Overview
 
-The project is split into two main files:
+The project is split into several main files:
 
-1. **main.c**: This is the main file for the Pebble watchapp, which is responsible for handling the user interface and dictation sessions. It uses Pebble's SDK to create a window, initiate dictation, and handle scrolling and button presses. It communicates with the companion JavaScript application running on the smartphone to send transcriptions and receive responses from the OpenAI API.
+1. **main.c**: This is the main file for the Pebble watchapp, which is responsible for handling the user interface and dictation sessions. It uses Pebble's SDK to create a window, initiate dictation, and handle scrolling and button presses.
 
-2. **pebble-js-app.js**: This is the JavaScript file that runs on the smartphone. It handles the communication with the OpenAI API, sending the transcriptions received from the watch and sending back the AI's responses. It also stores the API key securely.
+2. **api.js**: This JavaScript file runs on the smartphone. It handles the communication with either the OpenAI or Claude API, sending the transcriptions received from the watch and sending back the AI's responses.
 
-The app communicates with the OpenAI GPT-3 model using a POST request, and the response is then passed back to the watchapp to be displayed on the Pebble Time's screen.
+3. **config.js**: This file manages the configuration options for the app, including API provider selection, API keys, and other settings.
+
+4. **index.js**: This file handles the communication between the Pebble watch and the smartphone, routing messages and managing the conversation flow.
 
 ## Getting Started
 
-To use this project, you need to have a Rebble Subscription for the voice transcriptions to work and an OpenAI API key. If you don't have one, you can obtain it by visiting [OpenAI's API key page](https://platform.openai.com/account/api-keys).
+To use this project, you need to have a Rebble Subscription for the voice transcriptions to work and either an OpenAI API key or a Claude API key.
 
 ### Installation
 
@@ -37,3 +41,24 @@ To use the voice assistant:
 2. Press the "Select" button to start dictation.
 3. Speak your query or command.
 4. Wait for the AI's response to be displayed.
+
+### Configuration
+
+In the app settings, you can configure:
+
+1. API Provider (OpenAI or Claude)
+2. API Key for the selected provider
+3. Model selection (for OpenAI)
+4. System prompt
+5. Temperature setting
+6. Vibration on response
+
+Make sure to set up the correct API key for your chosen provider before using the app.
+
+## Contributing
+
+Contributions to PebbleGPT are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
