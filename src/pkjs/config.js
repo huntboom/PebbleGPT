@@ -1,5 +1,4 @@
 var Clay = require("pebble-clay");
-
 var CONFIG_KEY = "config";
 var API_KEY = "apiKey";
 var MODEL = "model";
@@ -14,7 +13,7 @@ var clayConfig = [
   {
     type: "text",
     defaultValue:
-      "To use PebbleGPT you will need " +
+      "To use ChatGPT you will need " +
       "your <a href='https://platform.openai.com/account/api-keys'>own OpenAI API key</a> and " +
       "<a href='https://help.rebble.io/setup-subscription/#1'>a Rebble subscription</a> (for voice transcription).",
   },
@@ -23,7 +22,7 @@ var clayConfig = [
     items: [
       {
         type: "heading",
-        defaultValue: "Required",
+        defaultValue: "Required for OpenAI",
       },
       {
         type: "input",
@@ -53,14 +52,32 @@ var clayConfig = [
     ],
   },
   {
-    type: "input",
-    messageKey: "claudeApiKey",
-    label: "Claude API key",
+    type: "section",
+    items: [
+      {
+        type: "heading",
+        defaultValue: "Required for Claude",
+      },
+      {
+        type: "input",
+        messageKey: "claudeApiKey",
+        label: "Claude API key",
+      },
+    ],
   },
   {
-  type: "input",
-  messageKey: "geminiApiKey",
-    label: "Gemini API key",
+    type: "section",
+    items: [
+      {
+        type: "heading",
+        defaultValue: "Required for Gemini",
+      },
+      {
+        type: "input",
+        messageKey: "geminiApiKey",
+        label: "Gemini API key",
+      },
+    ],
   },
   {
     type: "section",
