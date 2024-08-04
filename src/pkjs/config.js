@@ -133,7 +133,56 @@ var clayConfig = [
   },
 ];
 
-var clay = new Clay(clayConfig);
+var clay;
+
+Pebble.addEventListener('ready', function(e) {
+  console.log('PebbleKit JS ready!');
+  try {
+    clay = new Clay(clayConfig);
+    console.log('Clay initialized successfully');
+  } catch (error) {
+    console.error('Error initializing Clay:', error);
+  }
+});
+
+Pebble.addEventListener('showConfiguration', function(e) {
+  console.log('Showing configuration page');
+  try {
+    var clayUrl = clay.generateUrl();
+    console.log('Generated Clay URL:', clayUrl);
+    
+    // Create an HTML page with an iframe
+    var iframeHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>PebbleGPT Configuration</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>
+            body, html, iframe {
+              margin: 0;
+              padding: 0;
+              height: 100%;
+              width: 100%;
+              border: none;
+            }
+          </style>
+        </head>
+        <body>
+          <iframe src="${clayUrl}"></iframe>
+        </body>
+      </html>
+    `;
+    
+    // Convert the HTML to a data URI
+    var iframeUrl = 'data:text/html;charset=utf-8,' + encodeURIComponent(iframeHtml);
+    
+    // Open the URL containing the iframe
+    Pebble.openURL(iframeUrl);
+  } catch (error) {
+    console.error('Error generating or opening Clay URL:', error);
+  }
+});
 
 // Fired when the configuration is saved
 Pebble.addEventListener("webviewclosed", function (e) {
