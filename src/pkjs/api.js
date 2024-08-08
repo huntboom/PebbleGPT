@@ -1,6 +1,5 @@
 var {
   getConfig,
-  API_KEY,
   CLAUDE_API_KEY,
   GEMINI_API_KEY,
   SYSTEM_PROMPT,
@@ -33,11 +32,15 @@ function makeApiRequest(prompt, onResponse, onError) {
 
 function makeOpenAIRequest(prompt, onResponse, onError) {
   var config = getConfig();
+  console.log('OpenAI config:', JSON.stringify(config));
 
-  if (!config[API_KEY]) {
+  if (!config.openaiApiKey) {
+    console.log('OpenAI API key not found in config');
     onError("OpenAI API key not set");
     return;
   }
+
+  console.log('OpenAI API key found:', config.openaiApiKey.substring(0, 5) + '...');
 
   var method = "POST";
   var url = "https://api.openai.com/v1/chat/completions";
@@ -45,9 +48,13 @@ function makeOpenAIRequest(prompt, onResponse, onError) {
   var request = new XMLHttpRequest();
 
   request.onload = function () {
+    console.log('OpenAI response status:', this.status);
+    console.log('OpenAI response text:', this.responseText);
+
     var responseBody = JSON.parse(this.responseText);
 
     if (responseBody.error) {
+      console.log('OpenAI error:', responseBody.error);
       onError(responseBody.error.message);
       return;
     }
@@ -57,21 +64,28 @@ function makeOpenAIRequest(prompt, onResponse, onError) {
     onResponse(chatCompletion);
   };
 
+  request.onerror = function () {
+    console.log('OpenAI network error');
+    onError("Network error");
+  };
+
   request.open(method, url);
   request.setRequestHeader("Content-Type", "application/json");
-  request.setRequestHeader("Authorization", "Bearer " + config[API_KEY]);
+  request.setRequestHeader("Authorization", "Bearer " + config.openaiApiKey);
 
-  if (messages.length === 0 && config[SYSTEM_PROMPT]) {
-    messages.push({ role: "system", content: config[SYSTEM_PROMPT] });
+  if (messages.length === 0 && config.systemPrompt) {
+    messages.push({ role: "system", content: config.systemPrompt });
   }
 
   messages.push({ role: "user", content: prompt });
 
   var requestBody = JSON.stringify({
-    model: config[MODEL],
+    model: config.model,
     messages,
-    temperature: config[TEMPERATURE],
+    temperature: config.temperature,
   });
+
+  console.log('OpenAI request body:', requestBody);
 
   request.send(requestBody);
 }

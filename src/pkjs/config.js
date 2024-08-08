@@ -41,7 +41,7 @@ function getConfig() {
 
 module.exports = {
   getConfig: getConfig,
-  API_KEY: 'apiKey',
+  API_KEY: 'openaiApiKey',
   CLAUDE_API_KEY: 'claudeApiKey',
   GEMINI_API_KEY: 'geminiApiKey',
   SYSTEM_PROMPT: 'systemPrompt',
