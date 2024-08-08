@@ -1,6 +1,8 @@
 var {
   getConfig,
   API_KEY,
+  CLAUDE_API_KEY,
+  GEMINI_API_KEY,
   SYSTEM_PROMPT,
   TEMPERATURE,
   MODEL,
@@ -11,15 +13,21 @@ var messages = [];
 
 function makeApiRequest(prompt, onResponse, onError) {
   var config = getConfig();
+  console.log('Full config:', JSON.stringify(config));
+  console.log('API Provider:', config[API_PROVIDER]);
   
   if (config[API_PROVIDER] === "openai") {
+    console.log('Making OpenAI request');
     makeOpenAIRequest(prompt, onResponse, onError);
   } else if (config[API_PROVIDER] === "claude") {
+    console.log('Making Claude request');
     makeClaudeRequest(prompt, onResponse, onError);
   } else if (config[API_PROVIDER] === "gemini") {
+    console.log('Making Gemini request');
     makeGeminiRequest(prompt, onResponse, onError);
   } else {
-    onError("Invalid API provider");
+    console.log('Invalid API provider:', config[API_PROVIDER]);
+    onError("Invalid API provider: " + config[API_PROVIDER]);
   }
 }
 
@@ -71,7 +79,7 @@ function makeOpenAIRequest(prompt, onResponse, onError) {
 function makeClaudeRequest(prompt, onResponse, onError) {
   var config = getConfig();
 
-  if (!config.claudeApiKey) {
+  if (!config[CLAUDE_API_KEY]) {
     onError("Claude API key not set");
     return;
   }
@@ -98,7 +106,7 @@ function makeClaudeRequest(prompt, onResponse, onError) {
   };
 
   request.open(method, url);
-  request.setRequestHeader("x-api-key", config.claudeApiKey);
+  request.setRequestHeader("x-api-key", config[CLAUDE_API_KEY]);
   request.setRequestHeader("anthropic-version", "2023-06-01");
   request.setRequestHeader("content-type", "application/json");
 
@@ -123,7 +131,7 @@ function makeClaudeRequest(prompt, onResponse, onError) {
 function makeGeminiRequest(prompt, onResponse, onError) {
   var config = getConfig();
 
-  if (!config.geminiApiKey) {
+  if (!config[GEMINI_API_KEY]) {
     onError("Gemini API key not set");
     return;
   }
@@ -149,7 +157,7 @@ function makeGeminiRequest(prompt, onResponse, onError) {
     onError("Network error");
   };
 
-  request.open(method, url + "?key=" + config.geminiApiKey);
+  request.open(method, url + "?key=" + config[GEMINI_API_KEY]);
   request.setRequestHeader("Content-Type", "application/json");
 
   var requestBody = JSON.stringify({
