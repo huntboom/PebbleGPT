@@ -7,7 +7,8 @@ static Settings settings = {
   .apiKeySet = false,
   .apiProvider = "openai",
   .claudeApiKeySet = false,
-  .geminiApiKeySet = false
+  .geminiApiKeySet = false,
+  .confirmTranscription = false
 };
 
 void on_settings_received(DictionaryIterator *iter) {
@@ -38,6 +39,11 @@ void on_settings_received(DictionaryIterator *iter) {
     settings.geminiApiKeySet = strlen(gemini_api_key_tuple->value->cstring) != 0;
   }
 
+  Tuple *confirm_transcription_tuple = dict_find(iter, AppKeyConfirmTranscription);
+  if (confirm_transcription_tuple) {
+    settings.confirmTranscription = (confirm_transcription_tuple->value->int32 == 1);
+  }
+ 
   persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 

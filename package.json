@@ -25,7 +25,8 @@
       "vibrate": 7,
       "apiProvider": 8,
       "claudeApiKey": 9,
-      "geminiApiKey": 10
+      "geminiApiKey": 10,
+      "confirmTranscription": 11
     },
     "enableMultiJS": true,
     "displayName": "PebbleGPT",

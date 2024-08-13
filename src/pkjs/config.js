@@ -124,6 +124,12 @@ var clayConfig = [
         messageKey: 'vibrate',
         label: 'Vibrate on response',
         defaultValue: true
+      },
+      {
+        type: 'toggle',
+        messageKey: 'confirmTranscription',
+        label: 'Confirm transcription',
+        defaultValue: false
       }
     ],
   },

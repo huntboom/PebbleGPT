@@ -1,4 +1,5 @@
 #include <transcription.h>
+#include <settings.h>
 
 static DictationSession *s_dictation_session;
 
@@ -23,6 +24,7 @@ static void dictation_status_handler(DictationSession *session,
 void start_transcription(TranscriptionHandler handler) {
   transcription_handler = handler;
   s_dictation_session = dictation_session_create(MAX_DICTATION, dictation_status_handler, NULL);
-
+  
+  dictation_session_enable_confirmation(s_dictation_session, get_settings().confirmTranscription);
   dictation_session_start(s_dictation_session);
 }
