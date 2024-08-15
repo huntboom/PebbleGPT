@@ -14,11 +14,8 @@ static void scroll_text_down(ClickRecognizerRef recognizer, void *context) {
 }
 
 static void click_config_provider(void *context) {
-  // Set up the up and down buttons for scrolling
   window_single_repeating_click_subscribe(BUTTON_ID_UP, 100, scroll_text_up);
   window_single_repeating_click_subscribe(BUTTON_ID_DOWN, 100, scroll_text_down);
-
-  // Add the select button click handler
   window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
 }
 
@@ -26,28 +23,21 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  // Create the ScrollLayer first
   s_scroll_layer = scroll_layer_create(bounds);
   scroll_layer_set_click_config_onto_window(s_scroll_layer, window);
 
-  // Create the TextLayer with a larger height
   s_output_layer = text_layer_create(GRect(4, 4, bounds.size.w - 8, 10000));
   text_layer_set_text_alignment(s_output_layer, GTextAlignmentCenter);
   text_layer_set_font(s_output_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   
-  // Add the TextLayer to the ScrollLayer
   scroll_layer_add_child(s_scroll_layer, text_layer_get_layer(s_output_layer));
 
-  // Set the click configuration provider 
   window_set_click_config_provider(s_main_window, click_config_provider);
   
-  // Add the ScrollLayer to the window
   layer_add_child(window_layer, scroll_layer_get_layer(s_scroll_layer));
 
-  // Enable text flow and paging
   text_layer_enable_screen_text_flow_and_paging(s_output_layer, 2);
 
-  // Enable ScrollLayer paging
   scroll_layer_set_paging(s_scroll_layer, true);
 }
 
@@ -78,11 +68,9 @@ void scroll_to_top() {
 void set_text(char* text) {
   text_layer_set_text(s_output_layer, text);
   
-  // Update the content size after setting the text
   GSize content_size = text_layer_get_content_size(s_output_layer);
   scroll_layer_set_content_size(s_scroll_layer, content_size);
   
-  // Scroll to the top
   scroll_to_top();
 }
 
