@@ -26,14 +26,15 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  s_output_layer = text_layer_create(GRect(4, 4, bounds.size.w - 8, 2000)); // Increase height to 2000 to accommodate large texts
+  // Create the ScrollLayer first
+  s_scroll_layer = scroll_layer_create(bounds);
+  scroll_layer_set_click_config_onto_window(s_scroll_layer, window);
+
+  // Create the TextLayer with a larger height
+  s_output_layer = text_layer_create(GRect(4, 4, bounds.size.w - 8, 10000));
   text_layer_set_text_alignment(s_output_layer, GTextAlignmentCenter);
   text_layer_set_font(s_output_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   
-  // Create the ScrollLayer and set its content size
-  s_scroll_layer = scroll_layer_create(bounds);
-  scroll_layer_set_content_size(s_scroll_layer, GSize(bounds.size.w, 2000));
-
   // Add the TextLayer to the ScrollLayer
   scroll_layer_add_child(s_scroll_layer, text_layer_get_layer(s_output_layer));
 
@@ -42,9 +43,12 @@ static void window_load(Window *window) {
   
   // Add the ScrollLayer to the window
   layer_add_child(window_layer, scroll_layer_get_layer(s_scroll_layer));
-  #if defined(PBL_ROUND)
-    text_layer_enable_screen_text_flow_and_paging(s_output_layer, 0);
-  #endif
+
+  // Enable text flow and paging
+  text_layer_enable_screen_text_flow_and_paging(s_output_layer, 2);
+
+  // Enable ScrollLayer paging
+  scroll_layer_set_paging(s_scroll_layer, true);
 }
 
 static void window_unload(Window *window) {
@@ -66,13 +70,20 @@ void cleanup_ui() {
   window_destroy(s_main_window);
 }
 
-void set_text(char* text) {
-  text_layer_set_text(s_output_layer, text);
-}
-
 void scroll_to_top() {
   GPoint offset = GPointZero;
   scroll_layer_set_content_offset(s_scroll_layer, offset, true);
+}
+
+void set_text(char* text) {
+  text_layer_set_text(s_output_layer, text);
+  
+  // Update the content size after setting the text
+  GSize content_size = text_layer_get_content_size(s_output_layer);
+  scroll_layer_set_content_size(s_scroll_layer, content_size);
+  
+  // Scroll to the top
+  scroll_to_top();
 }
 
 void short_vibe() {
