@@ -10,6 +10,7 @@ typedef struct Settings {
   bool claudeApiKeySet;
   bool geminiApiKeySet; 
   bool confirmTranscription;
+  bool invertColors;
 } Settings;
 
 void on_settings_received(DictionaryIterator *iter);

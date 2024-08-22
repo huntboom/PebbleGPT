@@ -130,6 +130,12 @@ var clayConfig = [
         messageKey: 'confirmTranscription',
         label: 'Confirm transcription',
         defaultValue: false
+      },
+      {
+        type: 'toggle',
+        messageKey: 'invertColors',
+        label: 'Invert colors',
+        defaultValue: false
       }
     ],
   },

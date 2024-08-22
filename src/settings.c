@@ -8,7 +8,8 @@ static Settings settings = {
   .apiProvider = "openai",
   .claudeApiKeySet = false,
   .geminiApiKeySet = false,
-  .confirmTranscription = false
+  .confirmTranscription = false,
+  .invertColors = false
 };
 
 void on_settings_received(DictionaryIterator *iter) {
@@ -42,6 +43,11 @@ void on_settings_received(DictionaryIterator *iter) {
   Tuple *confirm_transcription_tuple = dict_find(iter, AppKeyConfirmTranscription);
   if (confirm_transcription_tuple) {
     settings.confirmTranscription = (confirm_transcription_tuple->value->int32 == 1);
+  }
+
+  Tuple *invert_colors_tuple = dict_find(iter, AppKeyInvertColors);
+  if (invert_colors_tuple) {
+    settings.invertColors = (invert_colors_tuple->value->int32 == 1);
   }
  
   persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));

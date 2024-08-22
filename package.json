@@ -26,7 +26,8 @@
       "apiProvider": 8,
       "claudeApiKey": 9,
       "geminiApiKey": 10,
-      "confirmTranscription": 11
+      "confirmTranscription": 11,
+      "invertColors": 12
     },
     "configurable":true, 
     "enableMultiJS": true,
