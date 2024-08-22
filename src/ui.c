@@ -23,6 +23,9 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
+  // Set window background color to black
+  window_set_background_color(window, GColorBlack);
+
   s_scroll_layer = scroll_layer_create(bounds);
   scroll_layer_set_click_config_onto_window(s_scroll_layer, window);
 
@@ -30,6 +33,10 @@ static void window_load(Window *window) {
   text_layer_set_text_alignment(s_output_layer, GTextAlignmentCenter);
   text_layer_set_font(s_output_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   
+  // Set text color to white and background to clear
+  text_layer_set_text_color(s_output_layer, GColorWhite);
+  text_layer_set_background_color(s_output_layer, GColorClear);
+
   scroll_layer_add_child(s_scroll_layer, text_layer_get_layer(s_output_layer));
 
   window_set_click_config_provider(s_main_window, click_config_provider);
