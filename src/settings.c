@@ -60,3 +60,8 @@ void init_settings() {
 Settings get_settings() {
   return settings;
 }
+
+void save_settings(Settings new_settings) {
+    settings = new_settings;
+    persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
+}

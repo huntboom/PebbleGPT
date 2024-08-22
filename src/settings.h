@@ -18,3 +18,4 @@ void on_settings_received(DictionaryIterator *iter);
 void init_settings();
 
 Settings get_settings();
+void save_settings(Settings new_settings);

@@ -8,3 +8,5 @@ void set_text(char* text);
 void scroll_to_top();
 
 void short_vibe();
+
+void update_ui_colors();

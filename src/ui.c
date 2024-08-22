@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include <settings.h>
+#include <settings_menu.h>
 
 static Window *s_main_window;
 static TextLayer *s_output_layer;
@@ -18,6 +19,7 @@ static void click_config_provider(void *context) {
   window_single_repeating_click_subscribe(BUTTON_ID_UP, 100, scroll_text_up);
   window_single_repeating_click_subscribe(BUTTON_ID_DOWN, 100, scroll_text_down);
   window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
+  window_long_click_subscribe(BUTTON_ID_SELECT, 700, NULL, show_settings_menu);
 }
 
 static void window_load(Window *window) {
@@ -93,4 +95,11 @@ void short_vibe() {
   static const uint32_t const segments[] = {100};
   VibePattern pat = {segments, 1};
   vibes_enqueue_custom_pattern(pat);
+}
+
+void update_ui_colors() {
+    Settings current_settings = get_settings();
+    window_set_background_color(s_main_window, current_settings.invertColors ? GColorWhite : GColorBlack);
+    text_layer_set_text_color(s_output_layer, current_settings.invertColors ? GColorBlack : GColorWhite);
+    layer_mark_dirty(window_get_root_layer(s_main_window));
 }
